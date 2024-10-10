@@ -7,6 +7,9 @@ A command-line tool to search and download gazette documents from the Hong Kong 
 - Search for gazette documents by year and query
 - Automatically download PDF documents
 - Organize downloaded files with a consistent naming convention
+- Concurrent downloads with retry functionality
+- Rate limiting to respect server resources
+- Interactive progress bar
 
 ## Installation
 
@@ -31,13 +34,15 @@ A command-line tool to search and download gazette documents from the Hong Kong 
 
 Run the script with the following command:
 ```
-python main.py -y YEAR1 -y YEAR2 -q "QUERY" -o OUTPUT_DIRECTORY
+python main.py -y YEAR1 -y YEAR2 -q "QUERY" -o OUTPUT_DIRECTORY [OPTIONS]
 ```
 
 Options:
 - `-y`, `--years`: Years to search (can be specified multiple times)
 - `-q`, `--query`: Search query
 - `-o`, `--output`: Output directory for downloaded PDFs
+- `-r`, `--retry`: Number of retry attempts for failed downloads (default: 3)
+- `-w`, `--max-workers`: Maximum number of concurrent downloads (default: 10)
 
 Example:
 ```
