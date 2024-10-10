@@ -12,8 +12,8 @@ A command-line tool to search and download gazette documents from the Hong Kong 
 
 1. Clone the repository:
    ```
-   git clone https://github.com/qiuhaohao/hk-gazette-downloader.git
-   cd hk-gazette-downloader
+   git clone https://github.com/qiuhaohao/hk-gov-gazette-download.git
+   cd hk-gov-gazette-download
    ```
 
 2. Set up a virtual environment:
