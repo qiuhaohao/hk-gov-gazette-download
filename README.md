@@ -45,12 +45,14 @@ Options:
 - `-w`, `--max-workers`: Maximum number of concurrent downloads (default: 10)
 - `-l`, `--language`: Language (default: chinese)
 
-### Chinese search example
+### Examples
+#### Chinese search
 ```sh
 python main.py -y 2024 -y 2023 -q "公司註冊處處長" -o output_pdfs
 ```
-This searches for documents from 2023 and 2024 with the query "公司註冊處處長" and downloads PDFs to "./output_pdfs".
-### English search
+This searches for Chinese documents from 2023 and 2024 with the query "公司註冊處處長" and downloads PDFs to "./output_pdfs".
+#### English search
 ```sh
 python main.py -y 2024 -y 2023 -q "Registrar of Companies" -o output_pdfs -l english
 ```
+This searches for English documents from 2023 and 2024 with the query "Registrar of Companies" and downloads PDFs to "./output_pdfs".
