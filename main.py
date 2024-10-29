@@ -37,15 +37,21 @@ class RateLimiter:
 
 rate_limiter = RateLimiter(max_calls=200, period=1)
 
-def get_gazette_links(years: List[int], query: str) -> List[str]:
-    base_url = "https://www.gld.gov.hk/egazette/tc_chi/search_gazette/search.php"
+def get_gazette_links(years: List[int], query: str, language: str = 'chinese') -> List[str]:
+    # Update base URL based on language
+    if language.lower() == 'english':
+        base_url = "https://www.gld.gov.hk/egazette/english/search_gazette/search.php"
+        submit_text = "Search"
+    else:
+        base_url = "https://www.gld.gov.hk/egazette/tc_chi/search_gazette/search.php"
+        submit_text = "搜尋"
     
     params = {
         "Years[]": years,
         "NoticeNo": "",
         "Title": query,
         "type": "mg",
-        "submit": "搜尋"
+        "submit": submit_text
     }
     
     response = requests.get(base_url, params=params)
@@ -62,11 +68,11 @@ def get_gazette_links(years: List[int], query: str) -> List[str]:
     return list(gazette_links)
 
 @rate_limiter
-def download_pdf(url: str, output_dir: str, retry_count: int) -> None:
+def download_pdf(url: str, output_dir: str, retry_count: int, language: str) -> None:
     parsed_url = urlparse(url)
     params = parse_qs(parsed_url.query)
     
-    filename = f"{params['year'][0]}-{params['vol'][0]}-{params['no'][0]}-{params['extra'][0]}-{params['type'][0]}-{params['number'][0]}.pdf"
+    filename = f"{params['year'][0]}-{params['vol'][0]}-{params['no'][0]}-{params['extra'][0]}-{params['type'][0]}-{params['number'][0]}-{language}.pdf"
     filepath = os.path.join(output_dir, filename)
     
     session = requests.Session()
@@ -109,19 +115,19 @@ def download_pdf(url: str, output_dir: str, retry_count: int) -> None:
 @click.option('--output', '-o', required=True, type=click.Path(), help='Output directory for downloaded PDFs')
 @click.option('--retry', '-r', default=5, help='Number of retry attempts for failed downloads')
 @click.option('--max-workers', '-w', default=20, help='Maximum number of concurrent downloads')
-def main(years, query, output, retry, max_workers):
+@click.option('--language', '-l', type=click.Choice(['english', 'chinese'], case_sensitive=False), default='chinese', help='Language')
+def main(years, query, output, retry, max_workers, language):
     """Download gazette documents from the Hong Kong government website."""
     os.makedirs(output, exist_ok=True)
-
     
-    print(f"Searching for documents with query: '{query}' for years: {', '.join(map(str, years))}")
-    links = get_gazette_links(list(years), query)
+    print(f"Searching for documents with query: '{query}' for years: {', '.join(map(str, years))} in {language}")
+    links = get_gazette_links(list(years), query, language)
     print(f"Found {len(links)} documents")
     
     sorted_links = sorted(links)
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
-        future_to_link = {executor.submit(download_pdf, link, output, retry): link for link in sorted_links}
+        future_to_link = {executor.submit(download_pdf, link, output, retry, language): link for link in sorted_links}
         
         with tqdm(total=len(sorted_links), desc="Downloading", unit="file") as pbar:
             for future in concurrent.futures.as_completed(future_to_link):

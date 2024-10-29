@@ -43,9 +43,14 @@ Options:
 - `-o`, `--output`: Output directory for downloaded PDFs
 - `-r`, `--retry`: Number of retry attempts for failed downloads (default: 3)
 - `-w`, `--max-workers`: Maximum number of concurrent downloads (default: 10)
+- `-l`, `--language`: Language (default: chinese)
 
-Example:
-```
+### Chinese search example
+```sh
 python main.py -y 2024 -y 2023 -q "公司註冊處處長" -o output_pdfs
 ```
 This searches for documents from 2023 and 2024 with the query "公司註冊處處長" and downloads PDFs to "./output_pdfs".
+### English search
+```sh
+python main.py -y 2024 -y 2023 -q "Registrar of Companies" -o output_pdfs -l english
+```
