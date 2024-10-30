@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# Check if a search pattern is provided
+if [ $# -lt 2 ]; then
+    echo "Usage: $0 pattern pdf_file" >&2
+    exit 1
+fi
+
+pattern="$1"
+pdf_file="$2"
+
+if [ -f "$pdf_file" ]; then
+    # Export the filename as an environment variable for perl
+    export pdf_file
+    # Export the pattern as well
+    export pattern
+    pdftotext "$pdf_file" - | tr -s ' ' | tr '\n' ' ' | perl -ne 'if (/$ENV{pattern}/i) { print "$ENV{pdf_file}\t$1\n" }'
+fi
