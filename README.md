@@ -59,7 +59,24 @@ This searches for English documents from 2023 and 2024 with the query "Registrar
 
 ## Search PDFs
 
-./scripts/pdfmatch script can be used to search for one single capturing group in a pdf file.
+If you wish to use the `pdfmatch` script to search for a pattern in a pdf file, you must have the `pdftotext` command installed.
+
+To install the binary you can use this command on Ubuntu or Debian:
+```sh
+apt-get install poppler-utils
+```
+
+On a mac you can install the binary using brew
+```sh
+brew install poppler
+```
+
+If you're on RedHat, CentOS, Rocky Linux or Fedora use this:
+```sh
+yum install poppler-utils
+```
+
+The `pdfmatch` script can be used to search for one single capturing group in a pdf file.
 ```sh
 $ ./scripts/pdfmatch "Pursuant to section (.+) of the Companies Ordinance" output_pdfs/2024-28-1-0-0-53-english.pdf
 output_pdfs/2024-28-1-0-0-53-english.pdf        745(2)(b)
